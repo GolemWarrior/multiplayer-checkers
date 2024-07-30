@@ -10,3 +10,8 @@
 .white-tile {
     background-color: #FFD2A6;
 }
+
+.checker-piece{
+    width: 70px;
+    margin-top: 15%;
+}
