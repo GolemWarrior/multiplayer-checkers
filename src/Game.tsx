@@ -1,3 +1,4 @@
+import Chessboard from './components/Chessboard/Chessboard'
 import './Game.css'
 
 function Game() {
@@ -5,7 +6,7 @@ function Game() {
   return (
     <>
       <div>
-        <h1> Game Board Page</h1>
+        <Chessboard/>
       </div>
     </>
   )
