@@ -18,7 +18,7 @@ function App() {
         <button>
           Player vs. Comp.
         </button>
-        <button>
+        <button onClick={() => navigate("/lobby")}>
           Online Play
         </button>
       </div>
