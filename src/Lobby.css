@@ -1,9 +1,13 @@
 
 
-.title {
-    padding-bottom: 5rem;
-}
+/* .title {
+    padding-bottom: 1rem;
+} */
 
 .joinGame {
+    padding-bottom: 1rem;
+}
+
+.createGame {
     padding-bottom: 1rem;
 }
