@@ -10,6 +10,20 @@ interface Piece{
 
 const pieces: Piece[] = [];
 
+function grabPiece(e: React.MouseEvent){
+    const element = e.target as HTMLElement
+    if (element.classList.contains('checker-piece')){
+        console.log(e.target);
+
+        const x = e.clientX-50;
+        const y = e.clientY-50;
+        element.style.position = "absolute";
+        element.style.left = `${x}px`
+        element.style.top = `${y}px`
+
+    }
+}
+
 
 for (let i=0;i<3;i++){
     for(let j=0;j<8;j++){
@@ -42,13 +56,10 @@ export default function Chessboard() {
             });
 
 
-            board.push(<Tile coordinates={[i,j]} image={image}/>);
+            board.push(<Tile key={`${i},${j}`} coordinates={[i,j]} image={image}/>);
         }
     }
 
 
-
-
-
-    return <div id='chessboard'>{board}</div>
+    return <div onMouseDown={e =>grabPiece(e)} id='chessboard'>{board}</div>
 }
