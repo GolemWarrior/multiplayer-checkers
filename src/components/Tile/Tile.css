@@ -12,6 +12,17 @@
 }
 
 .checker-piece{
-    width: 70px;
-    margin-top: 15%;
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80px;
+}
+
+.checker-piece:hover{
+    cursor: grab;
+}
+
+.checker-piece:active{
+    cursor: grabbing;
 }

@@ -10,7 +10,9 @@ export default function Tile({ coordinates, image }:Props){
         return <div className='tile white-tile'></div>
     }
     else{
-        return <div className='tile black-tile'><img className='checker-piece' src={image}/></div>
+        return <div className='tile black-tile'>
+            {image && <div className='checker-piece' style={{ backgroundImage: `url("${image}") `}} ></div>}
+        </div>
     }
     
 
