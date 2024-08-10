@@ -1,5 +1,7 @@
+import { useRef, useEffect, useState } from 'react';
 import Tile from '../Tile/Tile';
 import './Chessboard.css';
+import { stepIconClasses } from '@mui/material';
 
 interface Piece{
     image: String;
@@ -7,84 +9,18 @@ interface Piece{
     y    : number;
 }
 
-const pieces: Piece[] = [];
-
 
 let activePiece: HTMLElement|null = null;
 let wasPieceJustSet: Boolean = false;
 
-function grabPiece(e: React.MouseEvent){
-    const element = e.target as HTMLElement
-    if (element.classList.contains('checker-piece') && !wasPieceJustSet){
-        console.log(e.target);
-    
-        const x = e.clientX-50;
-        const y = e.clientY-50;
-        element.style.position = "absolute";
-        element.style.left = `${x}px`;
-        element.style.top = `${y}px`; 
-        activePiece = element;
 
-    }
-    else{
-        wasPieceJustSet = false
-    }
-}
 
-function movePiece(e: React.MouseEvent){
-    const element = e.target as HTMLElement
-    if (element == activePiece){
-
-        
-        console.log(e.target);
-
-        let checkerBoard = document.getElementById("chessboard");
-        //console.log(checkerBoard!.offsetLeft)
-
-        const xMin = Number(checkerBoard!.offsetLeft);
-        const yMin = Number(checkerBoard!.offsetTop);
-        const xMax = xMin + Number(checkerBoard!.offsetWidth)-100;
-        const yMax = yMin + Number(checkerBoard!.offsetHeight)-100;
-
-        const x = e.clientX-50;
-        const y = e.clientY-50;
-        element.style.position = "absolute";
-
-        if (x<(xMin)){
-            element.style.left = `${xMin}px`
-        }
-        else if(x>xMax){
-            element.style.left = `${xMax}px`
-        }
-         else{
-             element.style.left = `${x}px`
-        }
-
-        if (y<(yMin)){
-            element.style.top = `${yMin}px`
-        }
-        else if(y>yMax){
-            element.style.top = `${yMax}px`
-        }
-         else{
-             element.style.top = `${y}px`
-        }
-
-    }
-}
-
-function placePiece(e: React.MouseEvent){
-    if(activePiece){
-        activePiece = null;
-        wasPieceJustSet = true;
-    }
-
-}
+const initialBoardState: Piece[] =[];
 
 for (let i=0;i<3;i++){
     for(let j=0;j<8;j++){
         if((i+j)%2!=0){
-            pieces.push({image :"src/assets/black-piece.png",x :i,y :j});
+            initialBoardState.push({image :"src/assets/black-piece.png",x :i,y :j});
         }
     }
 }
@@ -92,14 +28,19 @@ for (let i=0;i<3;i++){
 for (let i=5;i<8;i++){
     for(let j=0;j<8;j++){
         if((i+j)%2!=0){
-            pieces.push({image :"src/assets/red-piece.png",x :i,y :j});
+            initialBoardState.push({image :"src/assets/red-piece.png",x :i,y :j});
         }
     }
 }
 
 
 export default function Chessboard() {
+    const [gridPosx, setGridPosx] = useState(0);
+    const [gridPosy, setGridPosy] = useState(0);
+    const [pieces, setPieces] = useState<Piece[] >(initialBoardState);
+    const chessboardRef = useRef<HTMLDivElement>(null);
     let board: any = [];
+
 
 
     for (let i = 0; i<8; i++){
@@ -118,10 +59,105 @@ export default function Chessboard() {
     }
 
 
+    function grabPiece(e: React.MouseEvent){
+        const element = e.target as HTMLElement
+        const chessboard = chessboardRef.current;
+        if (element.classList.contains('checker-piece') && !wasPieceJustSet && chessboard){
+            console.log(e.target);
+            const gridPosx = Math.abs(Math.round((e.clientX- chessboard.offsetLeft-50)/100));
+            const gridPosy = Math.abs(Math.round((e.clientY-chessboard.offsetTop-50)/100));
+            setGridPosx(gridPosx);
+            setGridPosy(gridPosy);
+
+            const x = e.clientX-50;
+            const y = e.clientY-50;
+            element.style.position = "absolute";
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`; 
+            activePiece = element;
+    
+        }
+        else{
+            wasPieceJustSet = false
+        }
+    }
+    
+    function movePiece(e: React.MouseEvent){
+        //const element = e.target as HTMLElement
+        if (activePiece){
+    
+            const element = activePiece;
+            
+            //console.log(e.target);
+    
+            let checkerBoard = document.getElementById("chessboard");
+            //console.log(checkerBoard!.offsetLeft)
+    
+            const xMin = Number(checkerBoard!.offsetLeft);
+            const yMin = Number(checkerBoard!.offsetTop);
+            const xMax = xMin + Number(checkerBoard!.offsetWidth)-100;
+            const yMax = yMin + Number(checkerBoard!.offsetHeight)-100;
+    
+            const x = e.clientX-50;
+            const y = e.clientY-50;
+            element.style.position = "absolute";
+    
+            if (x<(xMin)){
+                element.style.left = `${xMin}px`
+            }
+            else if(x>xMax){
+                element.style.left = `${xMax}px`
+            }
+             else{
+                 element.style.left = `${x}px`
+            }
+    
+            if (y<(yMin)){
+                element.style.top = `${yMin}px`
+            }
+            else if(y>yMax){
+                element.style.top = `${yMax}px`
+            }
+             else{
+                 element.style.top = `${y}px`
+            }
+    
+        }
+    }
+    
+    function placePiece(e: React.MouseEvent){
+        const chessboard = chessboardRef.current;
+        if(activePiece && chessboard){
+            const x = Math.abs(Math.round((e.clientX- chessboard.offsetLeft-50)/100));
+            const y = Math.abs(Math.round((e.clientY-chessboard.offsetTop-50)/100));
+            console.log(x,y);
+            setPieces((value)=>{  
+                const pieces = value.map((p)=>{
+                    if (p.x==gridPosy &&p.y==gridPosx){
+                        p.x = y;
+                        p.y = x;
+                    }
+                    return p;
+                });
+                return pieces;
+            });
+
+            activePiece = null;
+            wasPieceJustSet = true;
+
+        }
+    
+    }
+
+
     return <div 
     onMouseUp={e =>grabPiece(e)} 
     onMouseMove={e => movePiece(e)} 
     onMouseDown={e =>placePiece(e)}
-    id='chessboard'>{board}
+    id='chessboard'
+    ref = {chessboardRef}
+    >{board}
+    
+    
     </div>
 }
