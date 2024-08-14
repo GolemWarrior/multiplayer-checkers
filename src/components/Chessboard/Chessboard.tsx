@@ -1,7 +1,6 @@
-import { useRef, useEffect, useState } from 'react';
+import { act, useRef, useState } from 'react';
 import Tile from '../Tile/Tile';
 import './Chessboard.css';
-import { stepIconClasses } from '@mui/material';
 
 interface Piece{
     image: String;
@@ -63,9 +62,10 @@ export default function Chessboard() {
         const element = e.target as HTMLElement
         const chessboard = chessboardRef.current;
         if (element.classList.contains('checker-piece') && !wasPieceJustSet && chessboard){
-            console.log(e.target);
+            console.log("grabPiece");
             const gridPosx = Math.abs(Math.round((e.clientX- chessboard.offsetLeft-50)/100));
             const gridPosy = Math.abs(Math.round((e.clientY-chessboard.offsetTop-50)/100));
+            console.log("gridposx, gridposy: ", gridPosx,gridPosy);
             setGridPosx(gridPosx);
             setGridPosy(gridPosy);
 
@@ -88,10 +88,8 @@ export default function Chessboard() {
     
             const element = activePiece;
             
-            //console.log(e.target);
     
             let checkerBoard = document.getElementById("chessboard");
-            //console.log(checkerBoard!.offsetLeft)
     
             const xMin = Number(checkerBoard!.offsetLeft);
             const yMin = Number(checkerBoard!.offsetTop);
@@ -130,10 +128,13 @@ export default function Chessboard() {
         if(activePiece && chessboard){
             const x = Math.abs(Math.round((e.clientX- chessboard.offsetLeft-50)/100));
             const y = Math.abs(Math.round((e.clientY-chessboard.offsetTop-50)/100));
-            console.log(x,y);
+            console.log("placePiece");
+            console.log("x,y: ",x,y);
             setPieces((value)=>{  
                 const pieces = value.map((p)=>{
+                    console.log("gridposx, gridposy: ", gridPosx,gridPosy);
                     if (p.x==gridPosy &&p.y==gridPosx){
+                        console.log("p.x, p.y: ",p.x, p.y)
                         p.x = y;
                         p.y = x;
                     }
@@ -141,7 +142,10 @@ export default function Chessboard() {
                 });
                 return pieces;
             });
-
+            console.log("activePiece: ",activePiece);
+            activePiece!.style.position = "relative";
+            activePiece?.style.removeProperty("top");
+            activePiece?.style.removeProperty("left");
             activePiece = null;
             wasPieceJustSet = true;
 
