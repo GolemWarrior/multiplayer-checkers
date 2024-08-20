@@ -7,7 +7,9 @@ interface Props{
 
 export default function Tile({ coordinates, image }:Props){
     if ((coordinates[0]+coordinates[1])%2==0){
-        return <div className='tile white-tile'></div>
+        return <div className='tile white-tile'>
+            {image && <div className='checker-piece' style={{ backgroundImage: `url("${image}") `}} ></div>}
+        </div>
     }
     else{
         return <div className='tile black-tile'>
