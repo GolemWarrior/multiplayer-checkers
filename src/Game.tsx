@@ -8,6 +8,16 @@ function Game() {
   const [gameType, setGameType] = useState('');
   const [inviteCode, setInvitecode] = useState('');
 
+  const [messages, setMessages] = useState<string[]>([]);
+  const [newMessage, setNewMessage] = useState<string>('');
+
+  const handleSendMessage = () => {
+      if (newMessage.trim()) {
+          setMessages([...messages, newMessage]);
+          setNewMessage('');
+      }
+  };
+
 
   useEffect(() => {
     if(Cookies.get('gameType') == 'online'){
@@ -23,6 +33,7 @@ function Game() {
 
   return (
     <>
+    <div className='wrapper'>
 
       <div className="gameContainer">
         {
@@ -38,7 +49,14 @@ function Game() {
         </div>
 
       </div>
-
+      <div className='rightMenu'>
+        <div className='scoreBoard' style={{ textAlign: 'center', border: '2px solid white', borderRadius: '15px' }}>
+          <div className='scoreTitle'> <span style={{ verticalAlign: 'middle'}}> Score:  </span> </div>
+          <div className='scorePiece'> <img className='scorePieceImageLeft' src='src/assets/black-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText'> — &nbsp;5 </span> </div>
+          <div className='scorePiece'> <img className='scorePieceImageRight' src='src/assets/red-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText' > — &nbsp;5</span> </div>
+        </div>
+      </div>
+    </div>
 
     </>
   )

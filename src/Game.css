@@ -1,3 +1,8 @@
+.wrapper {
+  display:flex;
+  justify-content:space-between;
+}
+
 .inviteCode {
     position: absolute;
     top: 0;
@@ -5,4 +10,45 @@
   }
 .gameBoard{
     padding-top: 2rem;
+}
+
+.rightMenu {
+  padding-left: 2rem;
+  padding-top: 2rem;
+}
+
+.scoreBoard {
+  width: 22rem;
+}
+
+.scoreTitle {
+  text-align: left;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  font-size: 26px;
+}
+
+.scorePiece {
+  display: inline-block;
+  padding-bottom: 1rem;
+}
+
+.scorePieceImageLeft {
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+  vertical-align: middle;
+  height: 70px;
+}
+
+.scorePieceImageRight {
+  padding-bottom: 1rem;
+  vertical-align: middle;
+  height: 70px;
+}
+
+.scorePieceText {
+  vertical-align: 'middle';
+  margin-right: 2rem;
+  margin-left: 1rem;
+  font-size: 24px;
 }
