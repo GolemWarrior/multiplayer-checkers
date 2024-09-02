@@ -7,17 +7,8 @@ import Cookies from 'js-cookie';
 function Game() {
   const [gameType, setGameType] = useState('');
   const [inviteCode, setInvitecode] = useState('');
-
-  const [messages, setMessages] = useState<string[]>([]);
-  const [newMessage, setNewMessage] = useState<string>('');
-
-  const handleSendMessage = () => {
-      if (newMessage.trim()) {
-          setMessages([...messages, newMessage]);
-          setNewMessage('');
-      }
-  };
-
+  const [blackScore, setBlackScore] = useState(0);
+  const [redScore, setRedScore] = useState(0);
 
   useEffect(() => {
     if(Cookies.get('gameType') == 'online'){
@@ -52,8 +43,8 @@ function Game() {
       <div className='rightMenu'>
         <div className='scoreBoard' style={{ textAlign: 'center', border: '2px solid white', borderRadius: '15px' }}>
           <div className='scoreTitle'> <span style={{ verticalAlign: 'middle'}}> Score:  </span> </div>
-          <div className='scorePiece'> <img className='scorePieceImageLeft' src='src/assets/black-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText'> — &nbsp;5 </span> </div>
-          <div className='scorePiece'> <img className='scorePieceImageRight' src='src/assets/red-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText' > — &nbsp;5</span> </div>
+          <div className='scorePiece'> <img className='scorePieceImageLeft' src='src/assets/black-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText'> — &nbsp;{blackScore} </span> </div>
+          <div className='scorePiece'> <img className='scorePieceImageRight' src='src/assets/red-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText' > — &nbsp;{redScore}</span> </div>
         </div>
       </div>
     </div>
