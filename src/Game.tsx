@@ -1,6 +1,6 @@
 import Chessboard from './components/Chessboard/Chessboard'
 import './Game.css'
-import{ useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
 
@@ -18,9 +18,15 @@ function Game() {
         setInvitecode(inviteCode);
       }
     }
-
   }, [gameType, inviteCode]);
 
+    const onCapture = useCallback((color: string) => {
+      if (color === 'black') {
+        setRedScore(redScore+1);
+      } else if (color === 'red') {
+        setBlackScore(blackScore+1);
+      }
+    }, []);
 
   return (
     <>
@@ -36,7 +42,7 @@ function Game() {
             null
         }
         <div className='gameBoard'>
-          <Chessboard/>
+        <Chessboard onCapture={onCapture} />
         </div>
 
       </div>
