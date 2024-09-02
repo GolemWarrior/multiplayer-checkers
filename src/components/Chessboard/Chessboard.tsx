@@ -1,4 +1,4 @@
-import { act, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Tile from '../Tile/Tile';
 import './Chessboard.css';
 
@@ -128,20 +128,26 @@ export default function Chessboard() {
         if(activePiece && chessboard){
             const x = Math.abs(Math.round((e.clientX- chessboard.offsetLeft-50)/100));
             const y = Math.abs(Math.round((e.clientY-chessboard.offsetTop-50)/100));
-            console.log("placePiece");
-            console.log("x,y: ",x,y);
-            setPieces((value)=>{  
-                const pieces = value.map((p)=>{
-                    console.log("gridposx, gridposy: ", gridPosx,gridPosy);
-                    if (p.x==gridPosy &&p.y==gridPosx){
-                        console.log("p.x, p.y: ",p.x, p.y)
-                        p.x = y;
-                        p.y = x;
-                    }
-                    return p;
+            const isOccupied = pieces.some(p => p.x === y && p.y === x);
+            
+            if (!isOccupied) {
+                console.log("placePiece");
+                console.log("x,y: ",x,y);
+                setPieces((value)=>{  
+                    const pieces = value.map((p)=>{
+                        console.log("gridposx, gridposy: ", gridPosx,gridPosy);
+                        if (p.x==gridPosy &&p.y==gridPosx){
+                            console.log("p.x, p.y: ",p.x, p.y)
+                            if((x%2==0 && y%2!=0) || (x%2!=0 && y%2==0)){
+                                p.x = y;
+                                p.y = x;
+                            }
+                        }
+                        return p;
+                    });
+                    return pieces;
                 });
-                return pieces;
-            });
+            }
             console.log("activePiece: ",activePiece);
             activePiece!.style.position = "relative";
             activePiece?.style.removeProperty("top");
@@ -160,8 +166,7 @@ export default function Chessboard() {
     onMouseDown={e =>placePiece(e)}
     id='chessboard'
     ref = {chessboardRef}
-    >{board}
-    
-    
+    >
+        {board}
     </div>
 }
