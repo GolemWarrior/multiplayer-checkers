@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Tile from '../Tile/Tile';
 import './Chessboard.css';
 
@@ -43,6 +43,7 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
     const [gridPosx, setGridPosx] = useState(0);
     const [gridPosy, setGridPosy] = useState(0);
     const [pieces, setPieces] = useState<Piece[] >(initialBoardState);
+    const [capturedPieces, setCapturedPieces] =  useState<Piece[]>([]);
     const chessboardRef = useRef<HTMLDivElement>(null);
     let board: any = [];
 
@@ -63,6 +64,13 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
         }
     }
 
+    useEffect(() => {
+        if (capturedPieces.length > 0) {
+            if(onCapture){
+                onCapture(capturedPieces[capturedPieces.length - 1].color);
+            }
+        }
+      }, [capturedPieces]);
 
     function grabPiece(e: React.MouseEvent){
         const element = e.target as HTMLElement
@@ -153,10 +161,7 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
                     if (hoppedPiece && hoppedPiece.color !== activePieceColor) {
                         setPieces((value)=>{  
                             const pieces = value.filter((p)=>p.x!=midY || p.y!=midX);
-                            if (onCapture) {
-                                console.log("Calling OnCapture");
-                                onCapture(hoppedPiece.color);  // Call the onCapture function if defined
-                            }
+                            setCapturedPieces((capturedPieces) => [...capturedPieces, hoppedPiece]);
                             pieces.map((p)=>{
                                 console.log("gridposx, gridposy: ", gridPosx,gridPosy);
                                 if (p.x==gridPosy &&p.y==gridPosx){
