@@ -18,10 +18,17 @@ function Game() {
         setInvitecode(inviteCode);
       }
     }
-
   }, [gameType, inviteCode]);
 
-
+    // Function to handle piece capture and update the score
+    const handleCapture = (color: string) => {
+      if (color === 'black') {
+        setRedScore(redScore+1);
+      } else if (color === 'red') {
+        setBlackScore(blackScore+1);
+      }
+    };
+  
   return (
     <>
     <div className='wrapper'>
@@ -36,7 +43,7 @@ function Game() {
             null
         }
         <div className='gameBoard'>
-          <Chessboard/>
+        <Chessboard onCapture={handleCapture} />
         </div>
 
       </div>
