@@ -22,6 +22,8 @@ let wasPieceJustSet: Boolean = false;
 
 const initialBoardState: Piece[] =[];
 
+const currentColor = 'red';
+
 for (let i=0;i<3;i++){
     for(let j=0;j<8;j++){
         if((i+j)%2!=0){
@@ -46,8 +48,6 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
     const [capturedPieces, setCapturedPieces] =  useState<Piece[]>([]);
     const chessboardRef = useRef<HTMLDivElement>(null);
     let board: any = [];
-
-
 
     for (let i = 0; i<8; i++){
         for (let j = 0; j<8; j++){
@@ -136,62 +136,76 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
     
         }
     }
+
+
+    function moveOrHopPiece(x: number, y: number, midX: number, midY: number, hoppedPiece?: Piece){
+        setPieces((value)=>{
+            let pieces = value;
+            if(hoppedPiece){
+                pieces = value.filter((p)=>p.x!=midY || p.y!=midX);
+                setCapturedPieces((capturedPieces) => [...capturedPieces, hoppedPiece]);
+            }
+            pieces = pieces.map((p)=>{
+                console.log("gridposx, gridposy: ", gridPosx,gridPosy);
+                if (p.x==gridPosy &&p.y==gridPosx){
+                    console.log("p.x, p.y: ",p.x, p.y)
+                    if((x%2==0 && y%2!=0) || (x%2!=0 && y%2==0)){
+                        p.x = y;
+                        p.y = x;
+                    }
+                }
+                return p;
+            });
+            return pieces;
+        });
+    }
     
     function placePiece(e: React.MouseEvent){
         const chessboard = chessboardRef.current;
         if(activePiece && chessboard){
             const x = Math.abs(Math.round((e.clientX- chessboard.offsetLeft-50)/100));
             const y = Math.abs(Math.round((e.clientY-chessboard.offsetTop-50)/100));
+
+            const currentPiece = pieces.find(p => p.x === gridPosy && p.y === gridPosx);
             const isOccupied = pieces.some(p => p.x === y && p.y === x);
+            
             if (!isOccupied) {
-                console.log("placePiece");
                 console.log("x,y: ",x,y);
+                const midX = (gridPosx + x) / 2;
+                const midY = (gridPosy + y) / 2;
                 const deltaX = x - gridPosx;
                 const deltaY = y - gridPosy;
+
+                console.log("delta_x: ", deltaX);
+                console.log("delta_y: ", deltaY);
+
+
+                /*
+                1. if currentPiece.color == currentColor, then currentPiece can only move up (unless )
+                2. if currentPiece.color != currentColor, then currentPiece can only move down
+
+                 */
+
+
     
                 // Check if the move is a hop (2 squares diagonally)
                 if (Math.abs(deltaX) === 2 && Math.abs(deltaY) === 2) {
-                    const midX = (gridPosx + x) / 2;
-                    const midY = (gridPosy + y) / 2;
-
                     // Find the piece being hopped over
                     const hoppedPiece = pieces.find(p => p.x === midY && p.y === midX);
-                    const activePieceColor = pieces.find(p => p.x === gridPosy && p.y === gridPosx)?.color;
-                    console.log("ACTIVE PIECE COLOR ", activePieceColor, " HOPPED: ", hoppedPiece?.color);
-                    if (hoppedPiece && hoppedPiece.color !== activePieceColor) {
-                        setPieces((value)=>{  
-                            const pieces = value.filter((p)=>p.x!=midY || p.y!=midX);
-                            setCapturedPieces((capturedPieces) => [...capturedPieces, hoppedPiece]);
-                            pieces.map((p)=>{
-                                console.log("gridposx, gridposy: ", gridPosx,gridPosy);
-                                if (p.x==gridPosy &&p.y==gridPosx){
-                                    console.log("p.x, p.y: ",p.x, p.y)
-                                    if((x%2==0 && y%2!=0) || (x%2!=0 && y%2==0)){
-                                        p.x = y;
-                                        p.y = x;
-                                    }
-                                }
-                                return p;
-                            });
-                            return pieces;
-                        });
+                    if (hoppedPiece && hoppedPiece.color !== currentPiece?.color) {
+                        if((currentPiece?.color=='red' && ((deltaX==2 && deltaY==-2) || (deltaX==-2 && deltaY==-2))) ||
+                        (currentPiece?.color=='black' && ((deltaX==-2 && deltaY==2) || (deltaX==2 && deltaY==2)))
+                        || currentPiece?.isKing) {
+                            moveOrHopPiece(x, y, midX, midY, hoppedPiece);
+                        }
                     }
                 }
                 else if (Math.abs(deltaX) === 1 && Math.abs(deltaY) === 1){
-                    setPieces((value)=>{  
-                        const pieces = value.map((p)=>{
-                            console.log("gridposx, gridposy: ", gridPosx,gridPosy);
-                            if (p.x==gridPosy &&p.y==gridPosx){
-                                console.log("p.x, p.y: ",p.x, p.y)
-                                if((x%2==0 && y%2!=0) || (x%2!=0 && y%2==0)){
-                                    p.x = y;
-                                    p.y = x;
-                                }
-                            }
-                            return p;
-                        });
-                        return pieces;
-                    });
+                    if((currentPiece?.color=='red' && ((deltaX==1 && deltaY==-1) || (deltaX==-1 && deltaY==-1))) ||
+                        (currentPiece?.color=='black' && ((deltaX==-1 && deltaY==1) || (deltaX==1 && deltaY==1)))
+                        || currentPiece?.isKing){
+                        moveOrHopPiece(x,y,midX,midY);
+                    }
                 }
             }
             console.log("activePiece: ",activePiece);
