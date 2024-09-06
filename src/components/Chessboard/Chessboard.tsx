@@ -22,8 +22,6 @@ let wasPieceJustSet: Boolean = false;
 
 const initialBoardState: Piece[] =[];
 
-const currentColor = 'red';
-
 for (let i=0;i<3;i++){
     for(let j=0;j<8;j++){
         if((i+j)%2!=0){
@@ -138,7 +136,7 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
     }
 
 
-    function moveOrHopPiece(x: number, y: number, midX: number, midY: number, hoppedPiece?: Piece){
+    function moveOrHopPiece(x: number, y: number, midX: number, midY: number, currentPieceColor: string, hoppedPiece?: Piece){
         setPieces((value)=>{
             let pieces = value;
             if(hoppedPiece){
@@ -152,6 +150,16 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
                     if((x%2==0 && y%2!=0) || (x%2!=0 && y%2==0)){
                         p.x = y;
                         p.y = x;
+                        //TO-DO: Logic needs to change when we make it so that the board only has your color on the rows closer to you)
+                        // Also terrible code, might want to make a "promotion" function
+                        if(currentPieceColor=='red' && y==0){
+                            p.isKing=true; //promotion
+                            p.image = "src/assets/red-king.png";
+                        }
+                        else if (currentPieceColor=='black' && y==7) {
+                            p.isKing=true; //promotion
+                            p.image = "src/assets/black-king.png";
+                        }
                     }
                 }
                 return p;
@@ -196,7 +204,7 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
                         if((currentPiece?.color=='red' && ((deltaX==2 && deltaY==-2) || (deltaX==-2 && deltaY==-2))) ||
                         (currentPiece?.color=='black' && ((deltaX==-2 && deltaY==2) || (deltaX==2 && deltaY==2)))
                         || currentPiece?.isKing) {
-                            moveOrHopPiece(x, y, midX, midY, hoppedPiece);
+                            moveOrHopPiece(x, y, midX, midY, currentPiece.color, hoppedPiece);
                         }
                     }
                 }
@@ -204,7 +212,7 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
                     if((currentPiece?.color=='red' && ((deltaX==1 && deltaY==-1) || (deltaX==-1 && deltaY==-1))) ||
                         (currentPiece?.color=='black' && ((deltaX==-1 && deltaY==1) || (deltaX==1 && deltaY==1)))
                         || currentPiece?.isKing){
-                        moveOrHopPiece(x,y,midX,midY);
+                        moveOrHopPiece(x, y, midX, midY, currentPiece.color);
                     }
                 }
             }
