@@ -7,17 +7,8 @@ import Cookies from 'js-cookie';
 function Game() {
   const [gameType, setGameType] = useState('');
   const [inviteCode, setInvitecode] = useState('');
-
-  const [messages, setMessages] = useState<string[]>([]);
-  const [newMessage, setNewMessage] = useState<string>('');
-
-  const handleSendMessage = () => {
-      if (newMessage.trim()) {
-          setMessages([...messages, newMessage]);
-          setNewMessage('');
-      }
-  };
-
+  const [blackScore, setBlackScore] = useState(0);
+  const [redScore, setRedScore] = useState(0);
 
   useEffect(() => {
     if(Cookies.get('gameType') == 'online'){
@@ -27,10 +18,17 @@ function Game() {
         setInvitecode(inviteCode);
       }
     }
-
   }, [gameType, inviteCode]);
 
-
+    // Function to handle piece capture and update the score
+    const handleCapture = (color: string) => {
+      if (color === 'black') {
+        setRedScore(redScore+1);
+      } else if (color === 'red') {
+        setBlackScore(blackScore+1);
+      }
+    };
+  
   return (
     <>
     <div className='wrapper'>
@@ -45,15 +43,15 @@ function Game() {
             null
         }
         <div className='gameBoard'>
-          <Chessboard/>
+        <Chessboard onCapture={handleCapture} />
         </div>
 
       </div>
       <div className='rightMenu'>
         <div className='scoreBoard' style={{ textAlign: 'center', border: '2px solid white', borderRadius: '15px' }}>
           <div className='scoreTitle'> <span style={{ verticalAlign: 'middle'}}> Score:  </span> </div>
-          <div className='scorePiece'> <img className='scorePieceImageLeft' src='src/assets/black-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText'> — &nbsp;5 </span> </div>
-          <div className='scorePiece'> <img className='scorePieceImageRight' src='src/assets/red-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText' > — &nbsp;5</span> </div>
+          <div className='scorePiece'> <img className='scorePieceImageLeft' src='src/assets/black-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText'> — &nbsp;{blackScore} </span> </div>
+          <div className='scorePiece'> <img className='scorePieceImageRight' src='src/assets/red-piece.png' style={{ verticalAlign: 'middle'}} height='70px'></img> <span className='scorePieceText' > — &nbsp;{redScore}</span> </div>
         </div>
       </div>
     </div>
