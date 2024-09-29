@@ -1,4 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
+import promotionNoise from '../../assets/sounds/PromotionSoundCheckersAudio.m4a';
+import hopNoise from '../../assets/sounds/HopSoundCheckersAudio.m4a';
 import Tile from '../Tile/Tile';
 import './Chessboard.css';
 
@@ -13,36 +15,51 @@ interface Piece{
 
 interface ChessboardProps {
     onCapture?: (color: string) => void;
+    resetBoard: boolean;
 }
 
 let activePiece: HTMLElement|null = null;
 let wasPieceJustSet: Boolean = false;
 
-
-
-const initialBoardState: Piece[] =[];
-
-for (let i=0;i<3;i++){
-    for(let j=0;j<8;j++){
-        if((i+j)%2!=0){
-            initialBoardState.push({image :"src/assets/black-piece.png", color: "black", isKing:false, x :i,y :j});
+// Function to generate the initial board state
+const createInitialBoardState = (): Piece[] => {
+    const board: Piece[] = [];
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 8; j++) {
+        if ((i + j) % 2 !== 0) {
+          board.push({
+            image: 'src/assets/black-piece.png',
+            color: 'black',
+            isKing: false,
+            x: i,
+            y: j,
+          });
         }
+      }
     }
-}
-
-for (let i=5;i<8;i++){
-    for(let j=0;j<8;j++){
-        if((i+j)%2!=0){
-            initialBoardState.push({image :"src/assets/red-piece.png", color: "red", isKing:false, x :i,y :j});
+  
+    for (let i = 5; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        if ((i + j) % 2 !== 0) {
+          board.push({
+            image: 'src/assets/red-piece.png',
+            color: 'red',
+            isKing: false,
+            x: i,
+            y: j,
+          });
         }
+      }
     }
-}
+  
+    return board;
+  };
 
 
-export default function Chessboard({ onCapture }: ChessboardProps) {
+export default function Chessboard({ onCapture, resetBoard}: ChessboardProps) {
     const [gridPosx, setGridPosx] = useState(0);
     const [gridPosy, setGridPosy] = useState(0);
-    const [pieces, setPieces] = useState<Piece[] >(initialBoardState);
+    const [pieces, setPieces] = useState<Piece[] >(createInitialBoardState);
     const [capturedPieces, setCapturedPieces] =  useState<Piece[]>([]);
     const chessboardRef = useRef<HTMLDivElement>(null);
     let board: any = [];
@@ -61,6 +78,15 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
             board.push(<Tile key={`${i},${j}`} coordinates={[i,j]} image={image}/>);
         }
     }
+
+  // Reset board when `resetBoard` is true
+  useEffect(() => {
+    if (resetBoard) {
+      console.log('Resetting board...');
+      setPieces(createInitialBoardState()); // Reset pieces using a fresh initial state
+      setCapturedPieces([]); // Clear captured pieces
+    }
+  }, [resetBoard]);
 
     useEffect(() => {
         if (capturedPieces.length > 0) {
@@ -135,6 +161,11 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
         }
     }
 
+    function playSound(sound: string){
+        var audio = new Audio(sound)
+        audio.volume = 0.8;
+        audio.play();
+    }
 
     function moveOrHopPiece(x: number, y: number, midX: number, midY: number, currentPieceColor: string, hoppedPiece?: Piece){
         setPieces((value)=>{
@@ -153,12 +184,21 @@ export default function Chessboard({ onCapture }: ChessboardProps) {
                         //TO-DO: Logic needs to change when we make it so that the board only has your color on the rows closer to you)
                         // Also terrible code, might want to make a "promotion" function
                         if(currentPieceColor=='red' && y==0){
-                            p.isKing=true; //promotion
-                            p.image = "src/assets/red-king.png";
+                            if(!p.isKing){
+                                p.isKing=true; //promotion
+                                p.image = "src/assets/red-king.png";
+                                playSound(promotionNoise);
+                            }
                         }
                         else if (currentPieceColor=='black' && y==7) {
-                            p.isKing=true; //promotion
-                            p.image = "src/assets/black-king.png";
+                            if(!p.isKing){
+                                p.isKing=true; //promotion
+                                p.image = "src/assets/black-king.png";
+                                playSound(promotionNoise);
+                            }
+                        }
+                        else{
+                            playSound(hopNoise);
                         }
                     }
                 }
