@@ -7,7 +7,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 function Lobby() {
-    const [selected, setSelected] = useState<string | null>(null); // State to track selected button
+    const [selected, setSelected] = useState(""); // State to track selected button
 
     const navigate = useNavigate();
 
@@ -19,15 +19,16 @@ function Lobby() {
         // Set the cookie with name 'myCookie' and value 'cookieValue2'
         Cookies.set('gameType', 'online'); // expires in 7 days
         Cookies.set('inviteCode', generateInviteCode()); // expires in 7 days
+        console.log(selected); // Logging this for now, will need to connect color later on.
+        Cookies.set('color', selected);
         navigate("/game");
       };
     
     const handleSelection = (event: React.MouseEvent<HTMLElement>, newSelected: string | null) => {
-    if (newSelected !== null) {
-        setSelected(newSelected); // Only update if new selection is valid
-    }
+        if (newSelected !== null) {
+            setSelected(newSelected); // Only update if new selection is valid
+        }
     };
-  
 
   return (
     <>

@@ -17,7 +17,7 @@
     /* padding-bottom: 1rem; */
     display: inline-block;        /* Keep the box size tight to content */
     padding: 1rem;                /* Space around the text */
-    border: 2px solid white;      /* White border */
+    border: 0.1px solid white;      /* White border */
     border-radius: 8px;           /* Optional: rounded corners */
     text-align: center;           /* Center the text */
 }
@@ -27,7 +27,7 @@
     padding-bottom: 1rem;
     display: inline-block;        /* Keep the box size tight to content */
     padding: 1rem;                /* Space around the text */
-    border: 2px solid white;      /* White border */
+    border: 0.1px solid white;      /* White border */
     border-radius: 8px;           /* Optional: rounded corners */
     text-align: center;           /* Center the text */
 }
