@@ -34,6 +34,16 @@ function Lobby() {
   return (
     <>
         <div className='title' ><h1>Online Play</h1></div>
+        <h3 color='blue'> Enter Code & Join </h3>
+        <div className='joinGame'>
+            <div>
+                <TextField fullWidth id="outlined-basic" label="Enter Code..." variant="outlined"  InputLabelProps={{style : {color : 'white'} }} sx={{fieldset: { borderColor: "white" }}}  />
+            </div>
+            <div>
+                <button onClick={() => navigate("/game")}> Join Game </button>
+            </div>
+        </div>
+        <h2>--- OR ---</h2> 
         <h3> Choose Color & Create </h3>
         <div className='createGame'>
             <div>
@@ -56,18 +66,6 @@ function Lobby() {
             </div>
             <div className='createButton'>
                 <button onClick={handleSubmit}> Create Game</button>
-            </div>
-        </div>
-        <div>
-           <h2>--- OR ---</h2> 
-        </div>
-        <h3> Enter Code & Join </h3>
-        <div className='joinGame'>
-            <div>
-                <TextField fullWidth id="outlined-basic" label="Enter Code..." variant="outlined"  InputLabelProps={{style : {color : 'white'} }} sx={{fieldset: { borderColor: "white" }}}  />
-            </div>
-            <div>
-                <button onClick={() => navigate("/game")}> Join Game </button>
             </div>
         </div>
 
