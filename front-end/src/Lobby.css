@@ -5,9 +5,62 @@
 } */
 
 .joinGame {
-    padding-bottom: 1rem;
+    /* padding-bottom: 1rem; */
+    display: inline-block;        /* Keep the box size tight to content */
+    padding: 1rem;                /* Space around the text */
+    border: 2px solid white;      /* White border */
+    border-radius: 8px;           /* Optional: rounded corners */
+    color: black;                 /* Ensure the text color contrasts with the background */
+    text-align: center;           /* Center the text */
 }
+.joinGame {
+    /* padding-bottom: 1rem; */
+    display: inline-block;        /* Keep the box size tight to content */
+    padding: 1rem;                /* Space around the text */
+    border: 2px solid white;      /* White border */
+    border-radius: 8px;           /* Optional: rounded corners */
+    text-align: center;           /* Center the text */
+}
+
 
 .createGame {
     padding-bottom: 1rem;
+    display: inline-block;        /* Keep the box size tight to content */
+    padding: 1rem;                /* Space around the text */
+    border: 2px solid white;      /* White border */
+    border-radius: 8px;           /* Optional: rounded corners */
+    text-align: center;           /* Center the text */
 }
+
+
+.leftToggle, .rightToggle {
+    border: 0.1px solid white !important;
+    background-color: rgb(36,36,36) !important;
+    padding: 0;             /* Remove any padding from the buttons */
+    margin: 0;              /* Remove margin from the buttons */
+    width: 100px;            /* Set width to match the image */
+    height: 100px;           /* Set height to match the image */
+    border-radius: 50%;     /* Ensure the button is circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;   /* Disable any box-shadow */
+    outline: none;      /* Remove default outline */
+    transition: border-color 0.2s ease-in-out;  /* Smooth hover transition */
+  }
+  
+  .leftToggle img, .rightToggle img {
+    width: 100%;            /* Make image fill the button */
+    height: 100%;           /* Make image fill the button */
+    object-fit: cover;      /* Ensure image keeps aspect ratio */
+  }
+  
+  .leftToggle:hover, .rightToggle:hover {
+    border-color: rgb(92,98,229) !important;  /* Change border color on hover */
+  }
+
+
+  .ToggleButtonGroup {
+    gap: 0.7rem;            /* Set the gap between the buttons */
+  }
+  
